@@ -1,0 +1,19 @@
+{
+  "name": "knowmore-webrtc-signaling",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ciamiz/knowmore-webrtc-signaling.git"
+  },
+  "author": "luca ramundo <luca@expect.ws>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ciamiz/knowmore-webrtc-signaling/issues"
+  },
+  "homepage": "https://github.com/ciamiz/knowmore-webrtc-signaling#readme"
+}
