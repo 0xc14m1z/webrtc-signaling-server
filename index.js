@@ -17,6 +17,7 @@ wss.on('connection', (connection) => {
           break;
         }
         case 'requestConnection': {
+          onRequestConnection(connection, message)
           break;
         }
         case 'acceptConnection': {
@@ -55,12 +56,27 @@ malformedMessage = () => {
   return { error: "Malformed message" }
 }
 
+// handle the first connection command
 onConnect = (connection, command) => {
-  const { lid, uid } = command
-  if ( lid && uid ) {
-    if ( !lessons[lid] ) lessons[lid] = {}
-    lessons[lid][uid] = connection
-    respond(connection, { event: 'connected', users: Object.keys(lessons[lid]) })
+  const { lessonId, userId } = command
+
+  // if the requested fields has been given
+  if ( lessonId && userId ) {
+
+    // if the lessonId isn't in the data structure, we setup it
+    if ( !lessons[lessonId] ) lessons[lessonId] = {}
+
+    // add the new user connection to the lesson
+    lessons[lessonId][userId] = connection
+
+    // send to all the users connected at the same
+    // user is logged in lesson that a new
+    const users = Object.keys(lessons[lessonId])
+    Object.values(lessons[lessonId]).forEach( (lessonUserConnection) => {
+      respond(lessonUserConnection, { event: 'connected', lessonId, users })
+    })
+
+  // otherwise the message is malformed
   } else {
     respond(connection, malformedMessage())
   }
