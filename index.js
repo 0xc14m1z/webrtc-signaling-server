@@ -7,11 +7,13 @@ wss.on('connection', (connection) => {
 
   connection.on('message', (message) => {
 
-    const message = parseMessage(message)
+    message = parseMessage(message)
+
     if ( message ) {
 
       switch (message.command) {
         case 'connect': {
+          onConnect(connection, message)
           break;
         }
         case 'requestConnection': {
@@ -29,7 +31,7 @@ wss.on('connection', (connection) => {
       }
 
     } else {
-      connection.send(JSON.stringify({ error: "Malformed message" }))
+      respond(connection, malformedMessage())
     }
 
   })
@@ -43,4 +45,23 @@ wss.on('connection', (connection) => {
 parseMessage = (message) => {
   try { return JSON.parse(message) }
   catch (exception) { return undefined }
+}
+
+respond = (connection, message) => {
+  connection.send(JSON.stringify(message))
+}
+
+malformedMessage = () => {
+  return { error: "Malformed message" }
+}
+
+onConnect = (connection, command) => {
+  const { lid, uid } = command
+  if ( lid && uid ) {
+    if ( !lessons[lid] ) lessons[lid] = {}
+    lessons[lid][uid] = connection
+    respond(connection, { event: 'connected', users: Object.keys(lessons[lid]) })
+  } else {
+    respond(connection, malformedMessage())
+  }
 }
