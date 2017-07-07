@@ -81,3 +81,13 @@ onConnect = (connection, command) => {
     respond(connection, malformedMessage())
   }
 }
+
+onRequestConnection = (connection, command) => {
+  const { lessonId, userId, recipientId } = command
+  if ( lessonId && userId ) {
+    const recipientConnection = lessons[lessonId][recipientId]
+    respond(recipientConnection, { event: 'connectionRequest', user: userId })
+  } else {
+    respond(connection, malformedMessage())
+  }
+}
