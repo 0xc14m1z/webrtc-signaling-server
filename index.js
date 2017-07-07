@@ -21,6 +21,7 @@ wss.on('connection', (connection) => {
           break;
         }
         case 'acceptConnection': {
+          onAcceptConnection(connection, message)
           break;
         }
         case 'closeConnection': {
@@ -92,6 +93,23 @@ onRequestConnection = (connection, command) => {
     // turn the connection request to the recipient connection
     const recipientConnection = lessons[lessonId][recipientId]
     respond(recipientConnection, { event: 'connectionRequest', user: userId })
+
+  // otherwise the message is malformed
+  } else {
+    respond(connection, malformedMessage())
+  }
+}
+
+// handle the connection acceptance of a user to another
+onAcceptConnection = (connection, command) => {
+  const { lessonId, userId, requesterId } = command
+
+  // if the requested fields has been given
+  if ( lessonId && userId && requesterId ) {
+
+    // turn the connection acceptance to the requester connection
+    const requesterConnection = lessons[lessonId][requesterId]
+    respond(requesterConnection, { event: 'connectionAccepted', user: userId })
 
   // otherwise the message is malformed
   } else {
