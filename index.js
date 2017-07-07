@@ -82,11 +82,18 @@ onConnect = (connection, command) => {
   }
 }
 
+// handle the connection requests from a user to another
 onRequestConnection = (connection, command) => {
   const { lessonId, userId, recipientId } = command
-  if ( lessonId && userId ) {
+
+  // if the requested fields has been given
+  if ( lessonId && userId && recipientId ) {
+
+    // turn the connection request to the recipient connection
     const recipientConnection = lessons[lessonId][recipientId]
     respond(recipientConnection, { event: 'connectionRequest', user: userId })
+
+  // otherwise the message is malformed
   } else {
     respond(connection, malformedMessage())
   }
