@@ -5,10 +5,10 @@
   "main": "server.js",
   "scripts": {
     "start": "NODE_ENV=development nodemon server.js",
-    "config:scripts": "chmod +x deploy/*.sh",
-    "config:ssh": "./deploy/setup-ssh-keys.sh",
-    "config:nginx": "./deploy/setup-nginx.sh",
-    "config:pm2": "./deploy/setup-pm2.sh"
+    "config:scripts": "chmod +x helpers/*.sh",
+    "config:ssh": "./helpers/setup-ssh-keys.sh",
+    "config:nginx": "./helpers/setup-nginx.sh",
+    "config:pm2": "./helpers/setup-pm2.sh"
   },
   "repository": {
     "type": "git",
