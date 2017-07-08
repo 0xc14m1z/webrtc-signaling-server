@@ -1,7 +1,7 @@
 const WebSocketServer = require('ws').Server
-const wss = new WebSocketServer({ port: 8888 })
+const wss = new WebSocketServer({ port: process.env.port || 8888 })
 
-let lessons = []
+let connections = []
 
 wss.on('connection', (connection) => {
 
@@ -41,8 +41,8 @@ wss.on('connection', (connection) => {
   })
 
   connection.on('close', () => {
-    const { lessonId, userId } = connection
-    onClose(connection, { lessonId, userId })
+    const { roomId, userId } = connection
+    onClose(connection, { roomId, userId })
   })
 
 })
@@ -62,27 +62,27 @@ malformedMessage = () => {
 
 // handle the first connection command
 onConnect = (connection, command) => {
-  const { lessonId, userId } = command
+  const { roomId, userId } = command
 
   // if the requested fields has been given
-  if ( lessonId && userId ) {
+  if ( roomId && userId ) {
 
-    // we keep the lessonId and the userId attached to the connection
+    // we keep the roomId and the userId attached to the connection
     // in case of unexpected closing
-    connection.lessonId = lessonId
+    connection.roomId = roomId
     connection.userId = userId
 
-    // if the lessonId isn't in the data structure, we setup it
-    if ( !lessons[lessonId] ) lessons[lessonId] = {}
+    // if the roomId isn't in the data structure, we setup it
+    if ( !connections[roomId] ) connections[roomId] = {}
 
-    // add the new user connection to the lesson
-    lessons[lessonId][userId] = connection
+    // add the new user connection to the room
+    connections[roomId][userId] = connection
 
     // send to all the users connected at the same
-    // user is logged in lesson that a new
-    const users = Object.keys(lessons[lessonId])
-    Object.values(lessons[lessonId]).forEach( (lessonUserConnection) => {
-      respond(lessonUserConnection, { event: 'connected', lessonId, users })
+    // user is logged in room that a new
+    const users = Object.keys(connections[roomId])
+    Object.values(connections[roomId]).forEach( (roomUserConnection) => {
+      respond(roomUserConnection, { event: 'connected', roomId, users })
     })
 
   // otherwise the message is malformed
@@ -93,13 +93,13 @@ onConnect = (connection, command) => {
 
 // handle the connection requests from a user to another
 onRequestConnection = (connection, command) => {
-  const { lessonId, userId, recipientId } = command
+  const { roomId, userId, recipientId } = command
 
   // if the requested fields has been given
-  if ( lessonId && userId && recipientId ) {
+  if ( roomId && userId && recipientId ) {
 
     // turn the connection request to the recipient connection
-    const recipientConnection = lessons[lessonId][recipientId]
+    const recipientConnection = connections[roomId][recipientId]
     respond(recipientConnection, { event: 'connectionRequest', user: userId })
 
   // otherwise the message is malformed
@@ -110,13 +110,13 @@ onRequestConnection = (connection, command) => {
 
 // handle the connection acceptance of a user to another
 onAcceptConnection = (connection, command) => {
-  const { lessonId, userId, requesterId } = command
+  const { roomId, userId, requesterId } = command
 
   // if the requested fields has been given
-  if ( lessonId && userId && requesterId ) {
+  if ( roomId && userId && requesterId ) {
 
     // turn the connection acceptance to the requester connection
-    const requesterConnection = lessons[lessonId][requesterId]
+    const requesterConnection = connections[roomId][requesterId]
     respond(requesterConnection, { event: 'connectionAccepted', user: userId })
 
   // otherwise the message is malformed
@@ -127,13 +127,13 @@ onAcceptConnection = (connection, command) => {
 
 // handle the ice candidate proposal from a user to another
 onCandidateProposal = (connection, command) => {
-  const { lessonId, userId, recipientId, iceCandidate } = command
+  const { roomId, userId, recipientId, iceCandidate } = command
 
   // if the requested fields has been given
-  if ( lessonId && userId && recipientId && iceCandidate ) {
+  if ( roomId && userId && recipientId && iceCandidate ) {
 
     // turn the ice candidate proposal to the recipient connection
-    const recipientConnection = lessons[lessonId][recipientId]
+    const recipientConnection = connections[roomId][recipientId]
     respond(recipientConnection, { event: 'candidateProposal', user: userId, iceCandidate })
 
   // otherwise the message is malformed
@@ -144,19 +144,19 @@ onCandidateProposal = (connection, command) => {
 
 // handle the close connection command
 onClose = (connection, command) => {
-  const { lessonId, userId } = command
+  const { roomId, userId } = command
 
   // if the requested fields has been given
-  if ( lessonId && userId ) {
+  if ( roomId && userId ) {
 
-    // remove the user from the lesson connections
-    delete lessons[lessonId][userId]
+    // remove the user from the room connections
+    delete connections[roomId][userId]
 
     // send to all the users connected the signal of
     // the user disconnection
-    const users = Object.keys(lessons[lessonId])
-    Object.values(lessons[lessonId]).forEach( (lessonUserConnection) => {
-      respond(lessonUserConnection, { event: 'disconnected', lessonId, disconnectedUserId: userId, users })
+    const users = Object.keys(connections[roomId])
+    Object.values(connections[roomId]).forEach( (roomUserConnection) => {
+      respond(roomUserConnection, { event: 'disconnected', roomId, disconnectedUserId: userId, users })
     })
 
   // otherwise the message is malformed
