@@ -10,7 +10,8 @@
     "config:nginx": "./helpers/setup-nginx.sh",
     "config:pm2": "./helpers/setup-pm2.sh",
     "deploy:upload": "./helpers/deploy-upload.sh",
-    "deploy:initial": "./helpers/deploy-initial.sh"
+    "deploy:initial": "./helpers/deploy-initial.sh",
+    "deploy": "./helpers/deploy.sh"
   },
   "repository": {
     "type": "git",
