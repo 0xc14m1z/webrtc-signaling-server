@@ -1,22 +1,22 @@
 {
-  "name": "knowmore-webrtc-signaling",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "webrtc-signaling-server",
+  "version": "0.1.0",
+  "description": "Simple Node.js implementation of a web socket based signaling server for WebRTC applications.",
+  "main": "server.js",
   "scripts": {
-    "start": "NODE_ENV=development nodemon index.js",
+    "start": "NODE_ENV=development nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ciamiz/knowmore-webrtc-signaling.git"
+    "url": "git+https://github.com/ciamiz/webrtc-signaling-server.git"
   },
-  "author": "luca ramundo <luca@expect.ws>",
+  "author": "Luca Ramundo <luca@expect.ws>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ciamiz/knowmore-webrtc-signaling/issues"
+    "url": "https://github.com/ciamiz/webrtc-signaling-server/issues"
   },
-  "homepage": "https://github.com/ciamiz/knowmore-webrtc-signaling#readme",
+  "homepage": "https://github.com/ciamiz/webrtc-signaling-server#readme",
   "devDependencies": {
     "nodemon": "^1.11.0"
   },

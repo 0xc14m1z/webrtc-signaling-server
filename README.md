@@ -1,1 +1,1 @@
-# knowmore-webrtc-signaling
+# webrtc-signaling-server
