@@ -28,7 +28,8 @@ wss.on('connection', (connection) => {
           onClose(connection, message)
           break;
         }
-        case 'exchangeCandidate': {
+        case 'candidateProposal': {
+          onCandidateProposal(connection, message)
           break;
         }
       }
@@ -117,6 +118,23 @@ onAcceptConnection = (connection, command) => {
     // turn the connection acceptance to the requester connection
     const requesterConnection = lessons[lessonId][requesterId]
     respond(requesterConnection, { event: 'connectionAccepted', user: userId })
+
+  // otherwise the message is malformed
+  } else {
+    respond(connection, malformedMessage())
+  }
+}
+
+// handle the ice candidate proposal from a user to another
+onCandidateProposal = (connection, command) => {
+  const { lessonId, userId, recipientId, iceCandidate } = command
+
+  // if the requested fields has been given
+  if ( lessonId && userId && recipientId && iceCandidate ) {
+
+    // turn the ice candidate proposal to the recipient connection
+    const recipientConnection = lessons[lessonId][recipientId]
+    respond(recipientConnection, { event: 'candidateProposal', user: userId, iceCandidate })
 
   // otherwise the message is malformed
   } else {
