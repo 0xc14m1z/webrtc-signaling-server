@@ -25,6 +25,7 @@ wss.on('connection', (connection) => {
           break;
         }
         case 'closeConnection': {
+          onClose(connection, message)
           break;
         }
         case 'exchangeCandidate': {
@@ -110,6 +111,29 @@ onAcceptConnection = (connection, command) => {
     // turn the connection acceptance to the requester connection
     const requesterConnection = lessons[lessonId][requesterId]
     respond(requesterConnection, { event: 'connectionAccepted', user: userId })
+
+  // otherwise the message is malformed
+  } else {
+    respond(connection, malformedMessage())
+  }
+}
+
+// handle the close connection command
+onClose = (connection, command) => {
+  const { lessonId, userId } = command
+
+  // if the requested fields has been given
+  if ( lessonId && userId ) {
+
+    // remove the user from the lesson connections
+    delete lessons[lessonId][userId]
+
+    // send to all the users connected the signal of
+    // the user disconnection
+    const users = Object.keys(lessons[lessonId])
+    Object.values(lessons[lessonId]).forEach( (lessonUserConnection) => {
+      respond(lessonUserConnection, { event: 'disconnected', lessonId, disconnectedUserId: userId, users })
+    })
 
   // otherwise the message is malformed
   } else {
