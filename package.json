@@ -8,7 +8,8 @@
     "config:scripts": "chmod +x helpers/*.sh",
     "config:ssh": "./helpers/setup-ssh-keys.sh",
     "config:nginx": "./helpers/setup-nginx.sh",
-    "config:pm2": "./helpers/setup-pm2.sh"
+    "config:pm2": "./helpers/setup-pm2.sh",
+    "deploy:upload": "./helpers/deploy-upload.sh"
   },
   "repository": {
     "type": "git",
