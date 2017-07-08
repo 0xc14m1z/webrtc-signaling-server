@@ -31,6 +31,14 @@ Created the user, add it to the sudoers group with:
 adduser app sudo
 ```
 
+**Optional**
+
+If you don't want to be bothered with password asking for `sudo` commands via SSH or during the deploy process, run:
+
+```
+echo 'app ALL=NOPASSWD: ALL' >> /etc/sudoers
+```
+
 ### install software dependencies
 
 The application need the latest version of:
@@ -65,3 +73,31 @@ sudo npm install -g pm2
 The `-g` option tells `npm` to install the module globally, so that it's available system-wide.
 
 Verify that pm2 has been installed correctly running `pm2 -v`. An ASCII art welcome message should confirm you that everything has been done correctly.
+
+### environment configuration
+
+First of all we have to allow remote users to log into the server without password, using ssh keys. In order to achieve this, we have to generate the ssh keys for the server itself running:
+
+```
+ssh-keygen -t rsa
+```
+
+You'll be asked where to store the new key and if you'd like to setup a passphrase. Let's just hit `ENTER` right now and complete the creation of the keys.
+
+--
+
+**Attention**
+
+Before moving on, check the the required .env file contains the required variables. In the next helper scripts isn't yet provided any form of error handling.
+
+--
+
+To proceed with the configutaion, we first have to exchange our local ssh keys with the server using the `npm` helper script `npm run config:ssh`.
+
+Once done the exchange, running `npm run config:nginx` will setup the reverse proxy.
+
+We now have to set the process manager to start on boot:
+
+```
+npm run config:pm2
+```
