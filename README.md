@@ -86,18 +86,34 @@ You'll be asked where to store the new key and if you'd like to setup a passphra
 
 --
 
-**Attention**
-
-Before moving on, check the the required .env file contains the required variables. In the next helper scripts isn't yet provided any form of error handling.
+**Attention**: before moving on, check the the required .env file contains the required variables. In the next helper scripts isn't yet provided any form of error handling. Also, you have to be sure that all the helper scripts are executable running `npm run config:scripts`.
 
 --
 
-To proceed with the configutaion, we first have to exchange our local ssh keys with the server using the `npm` helper script `npm run config:ssh`.
+To proceed with the configuraion, we first have to exchange our local ssh keys with the server using the `npm` helper script `npm run config:ssh`.
 
-Once done the exchange, running `npm run config:nginx` will setup the reverse proxy.
+Once done the exchange, running `npm run config:nginx` will setup the reverse proxy. By default, it will listen on port 80 reversing to the 8888. If you want to change this values, look at the `nginx.conf:12` and `server.js:2` files.
 
 We now have to set the process manager to start on boot:
 
 ```
 npm run config:pm2
+```
+
+## deploy
+
+**Attention**: it is assumed that you have already make all the scripts executable with `npm run config:scripts` and exchanged keys with the server running `npm run config:ssh`.
+
+--
+
+The deploy process consists in a single command. It changes whether it is the first deploy ever or a next one. If it's the first time you deploy the application on a new server, you have to run:
+
+```
+npm run deploy:initial
+```
+
+If, instead, is a deploy on the already-running application, use
+
+```
+npm run deploy
 ```
