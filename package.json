@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "NODE_ENV=development nodemon server.js",
-    "config:scripts": "chmod +x deploy/*.sh"
+    "config:scripts": "chmod +x deploy/*.sh",
+    "config:ssh": "./deploy/setup-ssh-keys.sh"
   },
   "repository": {
     "type": "git",
