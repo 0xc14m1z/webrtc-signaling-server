@@ -40,7 +40,8 @@ wss.on('connection', (connection) => {
   })
 
   connection.on('close', () => {
-
+    const { lessonId, userId } = connection
+    onClose(connection, { lessonId, userId })
   })
 
 })
@@ -64,6 +65,11 @@ onConnect = (connection, command) => {
 
   // if the requested fields has been given
   if ( lessonId && userId ) {
+
+    // we keep the lessonId and the userId attached to the connection
+    // in case of unexpected closing
+    connection.lessonId = lessonId
+    connection.userId = userId
 
     // if the lessonId isn't in the data structure, we setup it
     if ( !lessons[lessonId] ) lessons[lessonId] = {}
