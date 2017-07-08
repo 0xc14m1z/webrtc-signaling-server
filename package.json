@@ -7,7 +7,8 @@
     "start": "NODE_ENV=development nodemon server.js",
     "config:scripts": "chmod +x deploy/*.sh",
     "config:ssh": "./deploy/setup-ssh-keys.sh",
-    "config:nginx": "./deploy/setup-nginx.sh"
+    "config:nginx": "./deploy/setup-nginx.sh",
+    "config:pm2": "./deploy/setup-pm2.sh"
   },
   "repository": {
     "type": "git",
