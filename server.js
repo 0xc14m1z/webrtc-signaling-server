@@ -80,9 +80,8 @@ onConnect = (connection, command) => {
 
     // send to all the users connected at the same
     // user is logged in room that a new
-    const users = Object.keys(connections[roomId])
     Object.values(connections[roomId]).forEach( (roomUserConnection) => {
-      respond(roomUserConnection, { event: 'connected', roomId, users })
+      respond(roomUserConnection, { event: 'connected', user: userId })
     })
 
   // otherwise the message is malformed
