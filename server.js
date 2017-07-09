@@ -28,7 +28,7 @@ wss.on('connection', (connection) => {
           onClose(connection, message)
           break;
         }
-        case 'candidateProposal': {
+        case 'iceCandidateProposal': {
           onCandidateProposal(connection, message)
           break;
         }
