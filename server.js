@@ -93,14 +93,14 @@ onConnect = (connection, command) => {
 
 // handle the connection requests from a user to another
 onRequestConnection = (connection, command) => {
-  const { roomId, userId, recipientId } = command
+  const { roomId, userId, recipientId, sessionDescription } = command
 
   // if the requested fields has been given
-  if ( roomId && userId && recipientId ) {
+  if ( roomId && userId && recipientId && sessionDescription ) {
 
     // turn the connection request to the recipient connection
     const recipientConnection = connections[roomId][recipientId]
-    respond(recipientConnection, { event: 'connectionRequest', user: userId })
+    respond(recipientConnection, { event: 'connectionRequest', user: userId, sessionDescription })
 
   // otherwise the message is malformed
   } else {
@@ -110,14 +110,14 @@ onRequestConnection = (connection, command) => {
 
 // handle the connection acceptance of a user to another
 onAcceptConnection = (connection, command) => {
-  const { roomId, userId, requesterId } = command
+  const { roomId, userId, requesterId, sessionDescription } = command
 
   // if the requested fields has been given
-  if ( roomId && userId && requesterId ) {
+  if ( roomId && userId && requesterId && sessionDescription ) {
 
     // turn the connection acceptance to the requester connection
     const requesterConnection = connections[roomId][requesterId]
-    respond(requesterConnection, { event: 'connectionAccepted', user: userId })
+    respond(requesterConnection, { event: 'connectionAccepted', user: userId, sessionDescription })
 
   // otherwise the message is malformed
   } else {
