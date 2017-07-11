@@ -124,16 +124,17 @@ onAcceptConnection = (connection, command) => {
   }
 }
 
-// handle the ice candidate proposal from a user to another
+// handle the ice candidate proposal from a user to the room
 onCandidateProposal = (connection, command) => {
-  const { roomId, userId, recipientId, iceCandidate } = command
+  const { roomId, userId, iceCandidate } = command
 
   // if the requested fields has been given
-  if ( roomId && userId && recipientId && iceCandidate ) {
+  if ( roomId && userId && iceCandidate ) {
 
-    // turn the ice candidate proposal to the recipient connection
-    const recipientConnection = connections[roomId][recipientId]
-    respond(recipientConnection, { event: 'candidateProposal', user: userId, iceCandidate })
+    // turn the ice candidate proposal to all the users of the room
+    Object.values(connections[roomId]).forEach( (roomUserConnection) => {
+      respond(roomUserConnection, { event: 'candidateProposal', user: userId, iceCandidate })
+    }
 
   // otherwise the message is malformed
   } else {
