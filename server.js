@@ -134,7 +134,7 @@ onCandidateProposal = (connection, command) => {
     // turn the ice candidate proposal to all the users of the room
     Object.values(connections[roomId]).forEach( (roomUserConnection) => {
       respond(roomUserConnection, { event: 'candidateProposal', user: userId, iceCandidate })
-    }
+    })
 
   // otherwise the message is malformed
   } else {
